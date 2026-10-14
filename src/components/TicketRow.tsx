@@ -3,8 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectTicketById, selectIsPendingMutation, selectActiveAgent } from "@/store/selectors";
-import { claimTicket } from "@/store/ticketsSlice";
+import {
+  selectTicketById,
+  selectIsPendingMutation,
+  selectActiveAgent,
+  selectSelectedTicketIds,
+} from "@/store/selectors";
+import { claimTicket, toggleSelectTicket } from "@/store/ticketsSlice";
 import { SlaCountdown } from "./SlaCountdown";
 import { AGENT_NAMES, AgentId, Priority } from "@/types/ticket";
 import { UserCheck, ShieldAlert, Sparkles, ChevronRight, User } from "lucide-react";
@@ -31,6 +36,8 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
   const ticket = useAppSelector((state) => selectTicketById(state, id));
   const isPending = useAppSelector(selectIsPendingMutation(id));
   const currentAgent = useAppSelector(selectActiveAgent);
+  const selectedIds = useAppSelector(selectSelectedTicketIds);
+  const isSelected = selectedIds.includes(id);
 
   if (!ticket) return null;
 
@@ -39,6 +46,11 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
   const assignedName = ticket.assigned_to
     ? AGENT_NAMES[ticket.assigned_to as AgentId] || `Unknown (${ticket.assigned_to})`
     : null;
+
+  const handleToggleSelect = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch(toggleSelectTicket(id));
+  };
 
   const handleClaim = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -49,11 +61,23 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
   };
 
   return (
-    <div className="group border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40 transition">
+    <div
+      className={`group border-b border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40 transition ${
+        isSelected ? "bg-indigo-50/60 dark:bg-indigo-950/30" : ""
+      }`}
+    >
       {/* Desktop Table Row (md and up) */}
       <div className="hidden md:grid grid-cols-12 gap-3 px-4 py-3 items-center">
-        {/* ID & Flags (Col 1-2) */}
-        <div className="col-span-2 flex items-center gap-1.5 min-w-0">
+        {/* Checkbox, ID & Flags (Col 1-2) */}
+        <div className="col-span-2 flex items-center gap-2 min-w-0">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => dispatch(toggleSelectTicket(id))}
+            onClick={(e) => e.stopPropagation()}
+            className="rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+            aria-label={`Select ticket ${ticket.id}`}
+          />
           <Link
             href={`/tickets/${ticket.id}`}
             className="font-mono text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline truncate"

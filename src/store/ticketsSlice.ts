@@ -38,6 +38,8 @@ export interface TicketsState
   pendingNewIds: string[];
   // Transient error message for toast / inline banner
   mutationError: string | null;
+  // Selected IDs for bulk actions
+  selectedTicketIds: string[];
 }
 
 const initialState: TicketsState = ticketsAdapter.getInitialState({
@@ -51,6 +53,7 @@ const initialState: TicketsState = ticketsAdapter.getInitialState({
   pending: {},
   pendingNewIds: [],
   mutationError: null,
+  selectedTicketIds: [],
 });
 
 // Async Thunk: Fetch Tickets with Cursor Pagination and Cancellation
@@ -196,6 +199,21 @@ export const ticketsSlice = createSlice({
     upsertSingleTicket(state, action: PayloadAction<Ticket>) {
       ticketsAdapter.upsertOne(state, action.payload);
     },
+    toggleSelectTicket(state, action: PayloadAction<string>) {
+      const id = action.payload;
+      const idx = state.selectedTicketIds.indexOf(id);
+      if (idx !== -1) {
+        state.selectedTicketIds.splice(idx, 1);
+      } else {
+        state.selectedTicketIds.push(id);
+      }
+    },
+    selectAllVisible(state, action: PayloadAction<string[]>) {
+      state.selectedTicketIds = action.payload;
+    },
+    clearSelection(state) {
+      state.selectedTicketIds = [];
+    },
   },
   extraReducers: (builder) => {
     // --- Fetch Tickets ---
@@ -299,6 +317,9 @@ export const {
   mergeNewTickets,
   applyUpdates,
   upsertSingleTicket,
+  toggleSelectTicket,
+  selectAllVisible,
+  clearSelection,
 } = ticketsSlice.actions;
 
 export default ticketsSlice.reducer;

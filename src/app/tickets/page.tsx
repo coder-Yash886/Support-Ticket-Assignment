@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import {
   fetchTickets,
   clearMutationError,
+  selectAllVisible,
+  clearSelection,
 } from "@/store/ticketsSlice";
 import {
   selectVisibleTicketIds,
@@ -14,10 +16,12 @@ import {
   selectTicketsError,
   selectNextCursor,
   selectMutationError,
+  selectSelectedTicketIds,
 } from "@/store/selectors";
 import { FiltersBar } from "@/components/FiltersBar";
 import { TicketRow } from "@/components/TicketRow";
 import { NewTicketsBanner } from "@/components/NewTicketsBanner";
+import { BulkActionsBar } from "@/components/BulkActionsBar";
 import { useLiveUpdates } from "@/hooks/useLiveUpdates";
 import { AlertCircle, RefreshCw, Inbox, AlertTriangle, X } from "lucide-react";
 
@@ -29,11 +33,15 @@ function TicketsContent() {
   useLiveUpdates({ intervalMs: 5000 });
 
   const ticketIds = useAppSelector(selectVisibleTicketIds);
+  const selectedIds = useAppSelector(selectSelectedTicketIds);
   const loading = useAppSelector(selectTicketsLoading);
   const loadingMore = useAppSelector(selectTicketsLoadingMore);
   const error = useAppSelector(selectTicketsError);
   const nextCursor = useAppSelector(selectNextCursor);
   const mutationError = useAppSelector(selectMutationError);
+
+  const isAllSelected =
+    ticketIds.length > 0 && ticketIds.every((id) => selectedIds.includes(id));
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const loadMoreObserverRef = useRef<HTMLDivElement | null>(null);
@@ -171,7 +179,22 @@ function TicketsContent() {
       <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
         {/* Desktop Table Header */}
         <div className="hidden md:grid grid-cols-12 gap-3 px-4 py-3 bg-zinc-50 dark:bg-zinc-800/60 border-b border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-          <div className="col-span-2">ID & Flags</div>
+          <div className="col-span-2 flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={isAllSelected}
+              onChange={() => {
+                if (isAllSelected) {
+                  dispatch(clearSelection());
+                } else {
+                  dispatch(selectAllVisible(ticketIds));
+                }
+              }}
+              className="rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+              aria-label="Select all visible tickets"
+            />
+            <span>ID & Flags</span>
+          </div>
           <div className="col-span-2">Priority / Status</div>
           <div className="col-span-4">Subject & Content</div>
           <div className="col-span-2">SLA Status</div>
@@ -229,6 +252,9 @@ function TicketsContent() {
           </div>
         )}
       </div>
+
+      {/* Floating Bulk Actions Bar */}
+      <BulkActionsBar />
     </div>
   );
 }

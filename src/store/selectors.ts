@@ -19,6 +19,7 @@ export const selectTicketsLoading = (state: RootState) => state.tickets.loading;
 export const selectTicketsLoadingMore = (state: RootState) => state.tickets.loadingMore;
 export const selectTicketsError = (state: RootState) => state.tickets.error;
 export const selectNextCursor = (state: RootState) => state.tickets.nextCursor;
+export const selectSelectedTicketIds = (state: RootState) => state.tickets.selectedTicketIds;
 
 // Filtered Ticket IDs for high-performance virtualized or list rendering
 export const selectVisibleTicketIds = createSelector(

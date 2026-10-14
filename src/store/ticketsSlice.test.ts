@@ -5,6 +5,9 @@ import ticketsReducer, {
   mergeNewTickets,
   applyUpdates,
   ticketsAdapter,
+  toggleSelectTicket,
+  selectAllVisible,
+  clearSelection,
 } from "./ticketsSlice";
 import { Ticket } from "@/types/ticket";
 
@@ -112,5 +115,29 @@ describe("Redux Tickets Slice & Optimistic Mutations", () => {
     // Dispatch merge
     state = ticketsReducer(state, mergeNewTickets());
     expect(state.pendingNewIds.length).toBe(0);
+  });
+
+  it("handles bulk ticket selection: toggle, select all visible, and clear selection", () => {
+    let state = ticketsReducer(undefined, { type: "@@INIT" });
+    expect(state.selectedTicketIds).toEqual([]);
+
+    // Select one ticket
+    state = ticketsReducer(state, toggleSelectTicket("T-TEST-1"));
+    expect(state.selectedTicketIds).toEqual(["T-TEST-1"]);
+
+    // Toggle off
+    state = ticketsReducer(state, toggleSelectTicket("T-TEST-1"));
+    expect(state.selectedTicketIds).toEqual([]);
+
+    // Select all visible
+    state = ticketsReducer(
+      state,
+      selectAllVisible(["T-TEST-1", "T-TEST-2", "T-TEST-3"])
+    );
+    expect(state.selectedTicketIds.length).toBe(3);
+
+    // Clear selection
+    state = ticketsReducer(state, clearSelection());
+    expect(state.selectedTicketIds).toEqual([]);
   });
 });
