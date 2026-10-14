@@ -18,11 +18,15 @@ import {
 import { FiltersBar } from "@/components/FiltersBar";
 import { TicketRow } from "@/components/TicketRow";
 import { NewTicketsBanner } from "@/components/NewTicketsBanner";
+import { useLiveUpdates } from "@/hooks/useLiveUpdates";
 import { AlertCircle, RefreshCw, Inbox, AlertTriangle, X } from "lucide-react";
 
 function TicketsContent() {
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
+
+  // Background live updates polling (every 5 seconds, pauses when hidden)
+  useLiveUpdates({ intervalMs: 5000 });
 
   const ticketIds = useAppSelector(selectVisibleTicketIds);
   const loading = useAppSelector(selectTicketsLoading);

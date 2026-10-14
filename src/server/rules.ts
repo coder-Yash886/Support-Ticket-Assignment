@@ -26,6 +26,7 @@ export interface TriageValidationErrors {
   priority?: string;
   category?: string;
   reason?: string;
+  [key: string]: string | undefined;
 }
 
 /**
