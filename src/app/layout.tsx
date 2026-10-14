@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -31,7 +32,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans">
         <Providers>
-          <Header />
+          <React.Suspense fallback={<header className="h-16 border-b border-zinc-200 dark:border-zinc-800" />}>
+            <Header />
+          </React.Suspense>
           <main className="flex-1">{children}</main>
         </Providers>
       </body>
