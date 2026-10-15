@@ -35,7 +35,6 @@ import {
   Zap,
   ArrowRight,
   Calendar,
-  Layers,
   Inbox,
 } from "lucide-react";
 
@@ -45,30 +44,30 @@ const PRIORITY_CONF: Record<
 > = {
   P0: {
     label: "P0 Critical",
-    text: "text-rose-700 dark:text-rose-300",
-    bg: "bg-rose-50 dark:bg-rose-950/40",
-    border: "border-rose-200/80 dark:border-rose-900/50",
+    text: "text-rose-700",
+    bg: "bg-rose-50",
+    border: "border-rose-200",
     dot: "bg-rose-500",
   },
   P1: {
     label: "P1 High",
-    text: "text-amber-700 dark:text-amber-300",
-    bg: "bg-amber-50 dark:bg-amber-950/40",
-    border: "border-amber-200/80 dark:border-amber-900/50",
+    text: "text-amber-800",
+    bg: "bg-amber-50",
+    border: "border-amber-200",
     dot: "bg-amber-500",
   },
   P2: {
     label: "P2 Normal",
-    text: "text-blue-700 dark:text-blue-300",
-    bg: "bg-blue-50 dark:bg-blue-950/40",
-    border: "border-blue-200/80 dark:border-blue-900/50",
+    text: "text-blue-700",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
     dot: "bg-blue-500",
   },
   P3: {
     label: "P3 Low",
-    text: "text-slate-600 dark:text-slate-400",
-    bg: "bg-slate-100 dark:bg-slate-800",
-    border: "border-slate-200 dark:border-slate-700",
+    text: "text-slate-600",
+    bg: "bg-slate-100",
+    border: "border-slate-200",
     dot: "bg-slate-400",
   },
 };
@@ -204,10 +203,10 @@ function TicketDetailContent() {
   if (notFound) {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center space-y-3">
-        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400">
+        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
           <Inbox className="w-5 h-5" />
         </div>
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+        <h2 className="text-base font-semibold text-slate-900">
           Ticket Not Found
         </h2>
         <p className="text-xs text-slate-500">
@@ -215,7 +214,7 @@ function TicketDetailContent() {
         </p>
         <Link
           href="/tickets"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-medium"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Return to tickets</span>
@@ -228,13 +227,13 @@ function TicketDetailContent() {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center space-y-3">
         <AlertTriangle className="w-6 h-6 text-amber-500 mx-auto" />
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+        <h2 className="text-base font-semibold text-slate-900">
           Error Loading Ticket
         </h2>
         <p className="text-xs text-slate-500">{fetchError}</p>
         <button
           onClick={loadTicket}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-medium cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Try again</span>
@@ -246,11 +245,11 @@ function TicketDetailContent() {
   if (loading && !ticket) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-4">
-        <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-32 skeleton-shimmer" />
-        <div className="h-32 bg-slate-200 dark:bg-slate-800 rounded-xl skeleton-shimmer" />
+        <div className="h-5 bg-slate-200 rounded w-32 skeleton-shimmer" />
+        <div className="h-32 bg-slate-200 rounded-xl skeleton-shimmer" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 h-64 bg-slate-200 dark:bg-slate-800 rounded-xl skeleton-shimmer" />
-          <div className="h-64 bg-slate-200 dark:bg-slate-800 rounded-xl skeleton-shimmer" />
+          <div className="md:col-span-2 h-64 bg-slate-200 rounded-xl skeleton-shimmer" />
+          <div className="h-64 bg-slate-200 rounded-xl skeleton-shimmer" />
         </div>
       </div>
     );
@@ -271,22 +270,22 @@ function TicketDetailContent() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
       {/* Top Breadcrumb & Actions Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div className="flex items-center gap-2 text-xs">
           <Link
             href="/tickets"
-            className="text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 transition"
+            className="text-slate-500 hover:text-slate-900 flex items-center gap-1 transition"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Tickets</span>
           </Link>
-          <span className="text-slate-300 dark:text-slate-700">/</span>
-          <span className="font-mono font-semibold text-slate-800 dark:text-slate-200">
+          <span className="text-slate-300">/</span>
+          <span className="font-mono font-semibold text-slate-800">
             {ticket.id}
           </span>
           <button
             onClick={handleCopyId}
-            className="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
+            className="p-1 rounded text-slate-400 hover:text-slate-600 transition"
             title="Copy ticket ID"
           >
             {copied ? (
@@ -302,7 +301,7 @@ function TicketDetailContent() {
           {ticket.flags.map((flag) => (
             <span
               key={flag}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900/60"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200"
             >
               <ShieldAlert className="w-3 h-3 text-amber-600" />
               <span>{flag.replace("_", " ")}</span>
@@ -311,7 +310,7 @@ function TicketDetailContent() {
           {ticket.triage_decision === "manual_review" && !ticket.reviewed_at && (
             <Link
               href="/review"
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 transition"
             >
               <Sparkles className="w-3 h-3 text-purple-600" />
               <span>Needs AI Review</span>
@@ -325,8 +324,8 @@ function TicketDetailContent() {
         <div
           className={`p-3 rounded-lg border text-xs flex items-center justify-between animate-in fade-in ${
             toastMessage.type === "success"
-              ? "bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-200"
-              : "bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-200"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+              : "bg-rose-50 border-rose-200 text-rose-800"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -339,7 +338,7 @@ function TicketDetailContent() {
           </div>
           <button
             onClick={() => setToastMessage(null)}
-            className="p-1 rounded text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+            className="p-1 rounded text-slate-500 hover:text-slate-800"
           >
             ✕
           </button>
@@ -347,7 +346,7 @@ function TicketDetailContent() {
       )}
 
       {/* Ticket Header Card */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 space-y-3">
+      <div className="bg-white rounded-xl p-5 border border-slate-200 space-y-3 shadow-2xs">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span
@@ -357,12 +356,12 @@ function TicketDetailContent() {
               <span>{priorityStyle.label}</span>
             </span>
 
-            <span className="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 capitalize">
+            <span className="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 capitalize">
               {STATUS_LABELS[ticket.status]}
             </span>
 
             {ticket.customer_plan && (
-              <span className="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 uppercase tracking-wider">
+              <span className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-600 uppercase tracking-wider">
                 {ticket.customer_plan}
               </span>
             )}
@@ -380,7 +379,7 @@ function TicketDetailContent() {
         </div>
 
         <h1
-          className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white break-words tracking-tight"
+          className="text-lg sm:text-xl font-bold text-slate-900 break-words tracking-tight"
           dir="auto"
         >
           {ticket.subject || (
@@ -388,7 +387,7 @@ function TicketDetailContent() {
           )}
         </h1>
 
-        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-2 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-2 border-t border-slate-100">
           <div className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
             <span>Created {new Date(ticket.createdAt).toLocaleString()}</span>
@@ -407,23 +406,23 @@ function TicketDetailContent() {
         {/* Left Column (8 cols): Customer Message & AI Assessment */}
         <div className="lg:col-span-8 space-y-5">
           {/* Customer Message Box */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+          <div className="bg-white rounded-xl p-5 border border-slate-200 space-y-3 shadow-2xs">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold text-xs">
+                <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
                   C
                 </div>
-                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <span className="text-xs font-semibold text-slate-800">
                   Customer Request
                 </span>
               </div>
-              <span className="text-[11px] text-slate-400 capitalize">
+              <span className="text-[11px] text-slate-500 capitalize font-medium">
                 Plan: {ticket.customer_plan}
               </span>
             </div>
 
             <div
-              className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap break-words leading-relaxed font-normal"
+              className="text-xs sm:text-sm text-slate-800 whitespace-pre-wrap break-words leading-relaxed font-normal"
               dir="auto"
             >
               {ticket.body || (
@@ -433,8 +432,8 @@ function TicketDetailContent() {
 
             {/* Inbound Attachment */}
             {ticket.attachment_url && (
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
+              <div className="pt-3 border-t border-slate-100">
+                <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1.5">
                   Attachment
                 </span>
                 {validatedAttachment ? (
@@ -442,14 +441,14 @@ function TicketDetailContent() {
                     href={validatedAttachment}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 text-xs font-medium transition"
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50 text-indigo-600 hover:bg-slate-100 border border-slate-200 text-xs font-medium transition"
                   >
                     <Paperclip className="w-3.5 h-3.5" />
                     <span className="truncate max-w-xs">{validatedAttachment}</span>
                     <ExternalLink className="w-3 h-3 opacity-60" />
                   </a>
                 ) : (
-                  <div className="flex items-center gap-2 p-2.5 rounded-lg bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-xs">
+                  <div className="flex items-center gap-2 p-2.5 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 text-xs">
                     <ShieldAlert className="w-4 h-4 text-rose-600 flex-shrink-0" />
                     <span>Unsafe attachment blocked ({ticket.attachment_url})</span>
                   </div>
@@ -459,18 +458,18 @@ function TicketDetailContent() {
           </div>
 
           {/* AI Triage Assessment Note */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+          <div className="bg-white rounded-xl p-5 border border-slate-200 space-y-3 shadow-2xs">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <Bot className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                <h3 className="text-xs font-semibold text-slate-900 dark:text-white">
+                <Bot className="w-4 h-4 text-purple-600" />
+                <h3 className="text-xs font-semibold text-slate-900">
                   Triage Assessment
                 </h3>
               </div>
               <button
                 onClick={handleRetriage}
                 disabled={retriaging}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer disabled:opacity-50"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer disabled:opacity-50"
               >
                 <Sparkles className={`w-3 h-3 ${retriaging ? "animate-spin text-purple-600" : ""}`} />
                 <span>{retriaging ? "Analyzing..." : "Re-evaluate"}</span>
@@ -478,8 +477,8 @@ function TicketDetailContent() {
             </div>
 
             {ticket.ai_summary && (
-              <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
-                <span className="font-semibold text-slate-900 dark:text-slate-100 block mb-0.5">
+              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <span className="font-semibold text-slate-900 block mb-0.5">
                   Summary:
                 </span>
                 {ticket.ai_summary}
@@ -487,12 +486,12 @@ function TicketDetailContent() {
             )}
 
             {ticket.ai_priority && ticket.ai_priority !== ticket.priority && (
-              <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-xs space-y-0.5">
-                <span className="font-semibold text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
+              <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-xs space-y-0.5">
+                <span className="font-semibold text-amber-900 flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
                   <span>Priority Override</span>
                 </span>
-                <p className="text-amber-800 dark:text-amber-300">
+                <p className="text-amber-800">
                   Model proposed {ticket.ai_priority}, effective priority resolved to {ticket.priority}.
                 </p>
               </div>
@@ -509,20 +508,20 @@ function TicketDetailContent() {
         {/* Right Column (4 cols): Ownership & Workflow Actions */}
         <div className="lg:col-span-4 space-y-4">
           {/* Assignment Panel */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 space-y-3">
-            <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 space-y-3 shadow-2xs">
+            <h4 className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
               Assignee
             </h4>
 
-            <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              <div className="w-7 h-7 rounded-md bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 font-bold text-xs">
+            <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+              <div className="w-7 h-7 rounded-md bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
                 {assignedName ? assignedName.slice(0, 2).toUpperCase() : "?"}
               </div>
               <div className="min-w-0">
-                <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 block truncate">
+                <span className="text-xs font-semibold text-slate-900 block truncate">
                   {assignedName || "Unassigned"}
                 </span>
-                <span className="text-[10px] text-slate-400 block">
+                <span className="text-[10px] text-slate-500 block">
                   {isAssignedToMe ? "You are active owner" : "Support team"}
                 </span>
               </div>
@@ -532,22 +531,22 @@ function TicketDetailContent() {
               <button
                 onClick={handleClaim}
                 disabled={isPending}
-                className="w-full py-2 px-3 rounded-lg bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="w-full py-2 px-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50 shadow-2xs"
               >
-                <Zap className="w-3.5 h-3.5 text-amber-400 dark:text-amber-500" />
+                <Zap className="w-3.5 h-3.5 text-amber-200" />
                 <span>{isPending ? "Claiming..." : "Claim this ticket"}</span>
               </button>
             ) : isAssignedToMe ? (
-              <div className="text-xs text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5" />
+              <div className="text-xs text-emerald-700 flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Assigned to you</span>
               </div>
             ) : null}
           </div>
 
           {/* Status Progression */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 space-y-3">
-            <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 space-y-3 shadow-2xs">
+            <h4 className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
               Status Actions
             </h4>
 
@@ -566,7 +565,11 @@ function TicketDetailContent() {
                     key={st}
                     onClick={() => handleStatusChange(st)}
                     disabled={isPending}
-                    className="w-full py-2 px-3 rounded-lg text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                    className={`w-full py-2 px-3 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50 shadow-2xs ${
+                      st === "resolved"
+                        ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                        : "bg-indigo-600 hover:bg-indigo-700 text-white"
+                    }`}
                   >
                     {isPending ? (
                       <RefreshCw className="w-3 h-3 animate-spin" />
@@ -587,28 +590,28 @@ function TicketDetailContent() {
           </div>
 
           {/* Ticket Properties */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 space-y-2">
-            <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 space-y-2 shadow-2xs">
+            <h4 className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">
               Details
             </h4>
 
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 text-xs">
-              <span className="text-slate-400">Category</span>
-              <span className="font-medium text-slate-700 dark:text-slate-300 capitalize">
+            <div className="flex justify-between py-1 border-b border-slate-100 text-xs">
+              <span className="text-slate-500">Category</span>
+              <span className="font-semibold text-slate-800 capitalize">
                 {ticket.category.replace("_", " ")}
               </span>
             </div>
 
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 text-xs">
-              <span className="text-slate-400">Plan</span>
-              <span className="font-medium text-slate-700 dark:text-slate-300 capitalize">
+            <div className="flex justify-between py-1 border-b border-slate-100 text-xs">
+              <span className="text-slate-500">Plan</span>
+              <span className="font-semibold text-slate-800 capitalize">
                 {ticket.customer_plan}
               </span>
             </div>
 
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 text-xs">
-              <span className="text-slate-400">Triage Decision</span>
-              <span className="font-medium text-slate-700 dark:text-slate-300 capitalize">
+            <div className="flex justify-between py-1 border-b border-slate-100 text-xs">
+              <span className="text-slate-500">Triage Decision</span>
+              <span className="font-semibold text-slate-800 capitalize">
                 {ticket.triage_decision.replace("_", " ")}
               </span>
             </div>
@@ -632,4 +635,3 @@ export default function TicketDetailPage() {
     </React.Suspense>
   );
 }
-

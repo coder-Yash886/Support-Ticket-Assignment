@@ -37,7 +37,6 @@ import {
   UserCheck,
   Sparkles,
   ArrowRight,
-  CheckCircle2,
 } from "lucide-react";
 import { AGENT_NAMES } from "@/types/ticket";
 import { slaStatus } from "@/lib/sla";
@@ -190,14 +189,14 @@ function TicketsContent() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               Tickets
             </h1>
-            <span className="text-xs text-slate-400 font-medium">
+            <span className="text-xs text-slate-500 font-medium">
               ({allTickets.length} loaded)
             </span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Active customer requests, SLA countdowns, and quick assignment.
           </p>
         </div>
@@ -206,7 +205,7 @@ function TicketsContent() {
           <button
             onClick={load}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 transition cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 shadow-2xs transition cursor-pointer disabled:opacity-50"
             title="Refresh queue"
           >
             <RefreshCw
@@ -219,23 +218,23 @@ function TicketsContent() {
         </div>
       </div>
 
-      {/* Interactive Quick View Selector Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-        <div className="flex items-center gap-1.5">
+      {/* Clean Segmented Quick View Tabs */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+        <div className="inline-flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
           <button
             onClick={() => setQuickView("all")}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition cursor-pointer ${
               quickView === "all"
-                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                ? "bg-white text-slate-900 font-semibold shadow-xs"
+                : "text-slate-600 hover:text-slate-900 font-medium"
             }`}
           >
             <span>All Tickets</span>
             <span
-              className={`text-[10px] font-semibold px-1 rounded-full ${
+              className={`text-[10px] font-semibold px-1.5 py-0.2 rounded-full ${
                 quickView === "all"
-                  ? "bg-slate-800 text-slate-200 dark:bg-slate-200 dark:text-slate-800"
-                  : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                  ? "bg-slate-100 text-slate-700"
+                  : "bg-slate-200/70 text-slate-500"
               }`}
             >
               {allTickets.length}
@@ -244,20 +243,20 @@ function TicketsContent() {
 
           <button
             onClick={() => setQuickView("my_tickets")}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition cursor-pointer ${
               quickView === "my_tickets"
-                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                ? "bg-white text-indigo-700 font-semibold shadow-xs"
+                : "text-slate-600 hover:text-slate-900 font-medium"
             }`}
           >
             <UserCheck className="w-3.5 h-3.5" />
             <span>Assigned to me</span>
             {myAssignedCount > 0 && (
               <span
-                className={`text-[10px] font-semibold px-1 rounded-full ${
+                className={`text-[10px] font-semibold px-1.5 py-0.2 rounded-full ${
                   quickView === "my_tickets"
-                    ? "bg-slate-800 text-slate-200 dark:bg-slate-200 dark:text-slate-800"
-                    : "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
+                    ? "bg-indigo-50 text-indigo-700"
+                    : "bg-slate-200/70 text-slate-600"
                 }`}
               >
                 {myAssignedCount}
@@ -267,20 +266,20 @@ function TicketsContent() {
 
           <button
             onClick={() => setQuickView("urgent")}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition cursor-pointer ${
               quickView === "urgent"
-                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                ? "bg-white text-amber-700 font-semibold shadow-xs"
+                : "text-slate-600 hover:text-slate-900 font-medium"
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
             <span>SLA at risk</span>
             {urgentCount > 0 && (
               <span
-                className={`text-[10px] font-semibold px-1 rounded-full ${
+                className={`text-[10px] font-semibold px-1.5 py-0.2 rounded-full ${
                   quickView === "urgent"
-                    ? "bg-slate-800 text-slate-200 dark:bg-slate-200 dark:text-slate-800"
-                    : "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                    ? "bg-amber-50 text-amber-700"
+                    : "bg-slate-200/70 text-slate-600"
                 }`}
               >
                 {urgentCount}
@@ -292,9 +291,9 @@ function TicketsContent() {
         {headerCounts.reviewQueue > 0 && (
           <Link
             href="/review"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium text-purple-700 dark:text-purple-300 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/50 dark:hover:bg-purple-900/50 transition"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200/80 transition shadow-2xs"
           >
-            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
             <span>AI Review Queue ({headerCounts.reviewQueue})</span>
             <ArrowRight className="w-3 h-3 ml-0.5" />
           </Link>
@@ -303,14 +302,14 @@ function TicketsContent() {
 
       {/* Mutation Error Notice */}
       {mutationError && (
-        <div className="flex items-center justify-between p-3 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-900 text-amber-900 dark:text-amber-200 text-xs">
+        <div className="flex items-center justify-between p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
             <span>{mutationError}</span>
           </div>
           <button
             onClick={() => dispatch(clearMutationError())}
-            className="p-0.5 rounded text-amber-700 hover:text-amber-900 dark:hover:text-amber-100"
+            className="p-0.5 rounded text-amber-700 hover:text-amber-900"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -325,12 +324,12 @@ function TicketsContent() {
 
       {/* Network Error */}
       {error && (
-        <div className="p-6 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-center space-y-2">
+        <div className="p-6 rounded-xl bg-rose-50 border border-rose-200 text-center space-y-2">
           <AlertCircle className="w-6 h-6 text-rose-600 mx-auto" />
-          <h3 className="font-semibold text-rose-900 dark:text-rose-200 text-sm">
+          <h3 className="font-semibold text-rose-900 text-sm">
             Could not fetch tickets
           </h3>
-          <p className="text-xs text-rose-700 dark:text-rose-300 max-w-sm mx-auto">{error}</p>
+          <p className="text-xs text-rose-700 max-w-sm mx-auto">{error}</p>
           <button
             onClick={load}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium shadow-xs transition cursor-pointer"
@@ -342,9 +341,9 @@ function TicketsContent() {
       )}
 
       {/* Tickets List Container */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-2xs">
         {/* Table Header Row */}
-        <div className="hidden md:grid grid-cols-12 gap-3 px-4 py-2.5 bg-slate-50/70 dark:bg-slate-800/40 border-b border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+        <div className="hidden md:grid grid-cols-12 gap-3 px-4 py-2.5 bg-slate-50/80 border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
           <div className="col-span-2 flex items-center gap-2">
             <input
               type="checkbox"
@@ -356,7 +355,7 @@ function TicketsContent() {
                   dispatch(selectAllVisible(filteredTicketIds));
                 }
               }}
-              className="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500/20 cursor-pointer"
+              className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500/20 cursor-pointer"
               aria-label="Select all visible tickets"
             />
             <span>Ticket</span>
@@ -369,15 +368,15 @@ function TicketsContent() {
 
         {/* Loading Skeletons */}
         {loading && filteredTicketIds.length === 0 && (
-          <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
+          <div className="divide-y divide-slate-100">
             {[1, 2, 3, 4, 5].map((idx) => (
               <div key={idx} className="p-4 space-y-2 skeleton-shimmer">
                 <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 bg-slate-200 dark:bg-slate-800 rounded" />
-                  <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-20" />
-                  <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-16" />
+                  <div className="w-4 h-4 bg-slate-200 rounded" />
+                  <div className="h-3.5 bg-slate-200 rounded w-20" />
+                  <div className="h-3.5 bg-slate-200 rounded w-16" />
                 </div>
-                <div className="h-3.5 bg-slate-200 dark:bg-slate-800 rounded w-3/4 ml-7" />
+                <div className="h-3.5 bg-slate-200 rounded w-3/4 ml-7" />
               </div>
             ))}
           </div>
@@ -386,18 +385,18 @@ function TicketsContent() {
         {/* Empty State */}
         {!loading && filteredTicketIds.length === 0 && !error && (
           <div className="p-12 text-center space-y-3">
-            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400">
+            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
               <Inbox className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+              <h3 className="text-sm font-semibold text-slate-800">
                 {quickView === "my_tickets"
                   ? "No tickets currently assigned to you"
                   : quickView === "urgent"
                   ? "No SLA breaches or at-risk tickets right now"
                   : "No tickets match your filters"}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mt-0.5">
+              <p className="text-xs text-slate-500 max-w-sm mx-auto mt-0.5">
                 {quickView !== "all"
                   ? "Switch to 'All Tickets' or clear search filters to view the full queue."
                   : "Try clearing keywords, status, or priority filters."}
@@ -408,7 +407,7 @@ function TicketsContent() {
                 setQuickView("all");
                 router.replace("/tickets");
               }}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition cursor-pointer"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold transition cursor-pointer"
             >
               <span>Reset view</span>
             </button>
@@ -416,7 +415,7 @@ function TicketsContent() {
         )}
 
         {/* Render Tickets */}
-        <div className="divide-y divide-slate-100 dark:divide-slate-800/60">
+        <div className="divide-y divide-slate-100">
           {filteredTicketIds.map((id) => (
             <TicketRow key={id} id={id} />
           ))}
@@ -426,7 +425,7 @@ function TicketsContent() {
         {nextCursor && quickView === "all" && (
           <div
             ref={loadMoreObserverRef}
-            className="p-3 text-center border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30"
+            className="p-3 text-center border-t border-slate-200 bg-slate-50/50"
           >
             {loadingMore ? (
               <div className="flex items-center justify-center gap-2 text-xs text-slate-500 font-medium">
@@ -436,7 +435,7 @@ function TicketsContent() {
             ) : (
               <button
                 onClick={handleLoadMore}
-                className="px-4 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
+                className="px-4 py-1.5 rounded-lg text-xs font-medium text-slate-600 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition cursor-pointer"
               >
                 Load more tickets
               </button>

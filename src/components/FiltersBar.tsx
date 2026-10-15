@@ -138,18 +138,18 @@ export function FiltersBar() {
     filters.category !== "all";
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 space-y-3 transition-colors">
+    <div className="bg-white rounded-xl p-3 sm:p-4 border border-slate-200 space-y-3 transition-colors shadow-2xs">
       <div className="flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
         {/* Search Input */}
         <div className="relative flex-1 group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-slate-700 dark:group-focus-within:text-slate-200 transition-colors" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
           <input
             ref={searchInputRef}
             type="text"
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
             placeholder="Search tickets by subject, body, or ID..."
-            className="w-full pl-9 pr-14 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:focus:border-indigo-400 transition"
+            className="w-full pl-9 pr-14 py-2 rounded-lg border border-slate-200 bg-slate-50/60 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition"
           />
           <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
             {localSearch ? (
@@ -159,13 +159,13 @@ export function FiltersBar() {
                   dispatch(setQuery(""));
                   updateUrl({ q: undefined });
                 }}
-                className="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                className="p-1 rounded text-slate-400 hover:text-slate-600 cursor-pointer"
                 title="Clear query"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             ) : (
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded">
+              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-white border border-slate-200 rounded">
                 /
               </kbd>
             )}
@@ -179,7 +179,7 @@ export function FiltersBar() {
             <select
               value={filters.status}
               onChange={(e) => handleStatusChange(e.target.value)}
-              className="appearance-none pl-2.5 pr-7 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-medium text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
+              className="appearance-none pl-2.5 pr-7 py-2 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer shadow-2xs"
             >
               <option value="all">All Status</option>
               {STATUSES.map((st) => (
@@ -196,7 +196,7 @@ export function FiltersBar() {
             <select
               value={filters.priority}
               onChange={(e) => handlePriorityChange(e.target.value)}
-              className="appearance-none pl-2.5 pr-7 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-medium text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
+              className="appearance-none pl-2.5 pr-7 py-2 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer shadow-2xs"
             >
               <option value="all">All Priorities</option>
               {PRIORITIES.map((p) => (
@@ -213,7 +213,7 @@ export function FiltersBar() {
             <select
               value={filters.category}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="appearance-none pl-2.5 pr-7 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-medium text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
+              className="appearance-none pl-2.5 pr-7 py-2 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer shadow-2xs"
             >
               <option value="all">All Categories</option>
               {CATEGORIES.map((cat) => (
@@ -229,7 +229,7 @@ export function FiltersBar() {
           {hasActiveFilters && (
             <button
               onClick={handleClear}
-              className="flex items-center gap-1 px-2.5 py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              className="flex items-center gap-1 px-2.5 py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer"
               title="Reset all filters"
             >
               <X className="w-3.5 h-3.5" />
@@ -241,11 +241,11 @@ export function FiltersBar() {
 
       {/* Active Filter Chips */}
       {hasActiveFilters && (
-        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100">
           <span className="text-[11px] text-slate-400 mr-1 font-medium">Filtered by:</span>
 
           {filters.q && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700">
               <span>Query: &ldquo;{filters.q}&rdquo;</span>
               <button
                 onClick={() => {
@@ -253,7 +253,7 @@ export function FiltersBar() {
                   dispatch(setQuery(""));
                   updateUrl({ q: undefined });
                 }}
-                className="hover:text-slate-900 dark:hover:text-white"
+                className="hover:text-slate-900"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -261,11 +261,11 @@ export function FiltersBar() {
           )}
 
           {filters.status !== "all" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700">
               <span>Status: {STATUS_LABELS[filters.status] || filters.status}</span>
               <button
                 onClick={() => handleStatusChange("all")}
-                className="hover:text-slate-900 dark:hover:text-white"
+                className="hover:text-slate-900"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -273,11 +273,11 @@ export function FiltersBar() {
           )}
 
           {filters.priority !== "all" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700">
               <span>Priority: {filters.priority}</span>
               <button
                 onClick={() => handlePriorityChange("all")}
-                className="hover:text-slate-900 dark:hover:text-white"
+                className="hover:text-slate-900"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -285,11 +285,11 @@ export function FiltersBar() {
           )}
 
           {filters.category !== "all" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700">
               <span>Category: {CATEGORY_LABELS[filters.category] || filters.category}</span>
               <button
                 onClick={() => handleCategoryChange("all")}
-                className="hover:text-slate-900 dark:hover:text-white"
+                className="hover:text-slate-900"
               >
                 <X className="w-3 h-3" />
               </button>

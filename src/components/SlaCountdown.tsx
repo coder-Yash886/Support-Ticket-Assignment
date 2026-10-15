@@ -28,8 +28,8 @@ export const SlaCountdown = React.memo(function SlaCountdown({
 
   if (status === "resolved") {
     return (
-      <div className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400">
-        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+      <div className="inline-flex items-center gap-1 text-xs font-medium text-slate-500">
+        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
         <span>Resolved</span>
       </div>
     );
@@ -44,10 +44,10 @@ export const SlaCountdown = React.memo(function SlaCountdown({
       <span
         className={`font-mono text-xs tabular-nums px-1.5 py-0.5 rounded text-[11px] font-medium ${
           state === "late"
-            ? "text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/50"
+            ? "text-rose-700 bg-rose-50 border border-rose-200/60"
             : state === "at_risk"
-            ? "text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50"
-            : "text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800"
+            ? "text-amber-800 bg-amber-50 border border-amber-200/60"
+            : "text-slate-600 bg-slate-100 border border-slate-200/60"
         }`}
         title={`Time remaining: ${formatted}`}
       >

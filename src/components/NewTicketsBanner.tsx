@@ -16,13 +16,13 @@ export function NewTicketsBanner() {
     <div className="sticky top-16 z-30 flex justify-center my-2 animate-in fade-in slide-in-from-top-2 duration-150">
       <button
         onClick={() => dispatch(mergeNewTickets())}
-        className="group flex items-center gap-2 px-3.5 py-1.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-full shadow-md text-xs font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-all cursor-pointer"
+        className="group flex items-center gap-2 px-3.5 py-1.5 bg-white text-slate-800 border border-slate-200 shadow-md rounded-full text-xs font-semibold hover:bg-slate-50 transition-all cursor-pointer"
       >
-        <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 dark:bg-indigo-600" />
+        <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-pulse" />
         <span>
-          {count} new {count === 1 ? "ticket" : "tickets"} arrived — click to show
+          {count} new {count === 1 ? "ticket" : "tickets"} arrived — click to load
         </span>
-        <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />
+        <ArrowUp className="w-3.5 h-3.5 text-indigo-600 transition-transform group-hover:-translate-y-0.5" />
       </button>
     </div>
   );

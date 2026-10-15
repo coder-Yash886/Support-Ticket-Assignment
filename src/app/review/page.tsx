@@ -35,30 +35,30 @@ const PRIORITY_CONF: Record<
 > = {
   P0: {
     label: "P0 Critical",
-    text: "text-rose-700 dark:text-rose-300",
-    bg: "bg-rose-50 dark:bg-rose-950/40",
-    border: "border-rose-200/80 dark:border-rose-900/50",
+    text: "text-rose-700",
+    bg: "bg-rose-50",
+    border: "border-rose-200",
     dot: "bg-rose-500",
   },
   P1: {
     label: "P1 High",
-    text: "text-amber-700 dark:text-amber-300",
-    bg: "bg-amber-50 dark:bg-amber-950/40",
-    border: "border-amber-200/80 dark:border-amber-900/50",
+    text: "text-amber-800",
+    bg: "bg-amber-50",
+    border: "border-amber-200",
     dot: "bg-amber-500",
   },
   P2: {
     label: "P2 Normal",
-    text: "text-blue-700 dark:text-blue-300",
-    bg: "bg-blue-50 dark:bg-blue-950/40",
-    border: "border-blue-200/80 dark:border-blue-900/50",
+    text: "text-blue-700",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
     dot: "bg-blue-500",
   },
   P3: {
     label: "P3 Low",
-    text: "text-slate-600 dark:text-slate-400",
-    bg: "bg-slate-100 dark:bg-slate-800",
-    border: "border-slate-200 dark:border-slate-700",
+    text: "text-slate-600",
+    bg: "bg-slate-100",
+    border: "border-slate-200",
     dot: "bg-slate-400",
   },
 };
@@ -271,17 +271,17 @@ function ReviewContent() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Title & Introduction */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
               Triage Review
             </h1>
-            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
               {reviewTickets.length} pending
             </span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Human-in-the-loop review for ambiguous classifications and policy constraints.
           </p>
         </div>
@@ -289,7 +289,7 @@ function ReviewContent() {
         <button
           onClick={loadReviewTickets}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition cursor-pointer self-start sm:self-auto disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition cursor-pointer self-start sm:self-auto disabled:opacity-50"
         >
           <RefreshCw
             className={`w-3.5 h-3.5 text-slate-400 ${
@@ -305,8 +305,8 @@ function ReviewContent() {
         <div
           className={`p-3 rounded-lg border text-xs flex items-center justify-between animate-in fade-in ${
             toastMessage.type === "success"
-              ? "bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-200"
-              : "bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-200"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+              : "bg-rose-50 border-rose-200 text-rose-800"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -319,7 +319,7 @@ function ReviewContent() {
           </div>
           <button
             onClick={() => setToastMessage(null)}
-            className="p-1 rounded text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+            className="p-1 rounded text-slate-500 hover:text-slate-800"
           >
             ✕
           </button>
@@ -328,7 +328,7 @@ function ReviewContent() {
 
       {/* Network Error Box */}
       {error && (
-        <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between">
+        <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0" />
             <span>{error}</span>
@@ -344,20 +344,20 @@ function ReviewContent() {
 
       {/* Empty State: Inbox Zero */}
       {!loading && reviewTickets.length === 0 && (
-        <div className="bg-white dark:bg-slate-900 rounded-xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-3">
-          <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center mx-auto text-emerald-600 dark:text-emerald-400">
+        <div className="bg-white rounded-xl p-12 text-center border border-slate-200 shadow-2xs space-y-3">
+          <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center mx-auto text-emerald-600">
             <CheckCircle2 className="w-5 h-5" />
           </div>
-          <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+          <h3 className="text-base font-semibold text-slate-900">
             Review Queue All Caught Up
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
             All tickets requiring manual evaluation have been resolved. New ambiguous tickets will appear here automatically.
           </p>
           <div className="pt-2">
             <Link
               href="/tickets"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition shadow-2xs"
             >
               <span>Back to Tickets</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -378,26 +378,26 @@ function ReviewContent() {
           return (
             <div
               key={ticket.id}
-              className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 space-y-4 transition"
+              className="bg-white rounded-xl border border-slate-200 p-5 space-y-4 transition shadow-2xs"
             >
               {/* Header: ID, Plan, Flags, Created */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2 flex-wrap">
                   <Link
                     href={`/tickets/${ticket.id}`}
-                    className="font-mono text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400"
+                    className="font-mono text-xs font-semibold text-slate-800 hover:text-indigo-600"
                   >
                     {ticket.id}
                   </Link>
 
-                  <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 capitalize">
+                  <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-600 capitalize">
                     {ticket.customer_plan}
                   </span>
 
                   {ticket.flags.map((flag) => (
                     <span
                       key={flag}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200"
                     >
                       <ShieldAlert className="w-3 h-3 text-amber-600" />
                       <span>{flag.replace("_", " ")}</span>
@@ -414,7 +414,7 @@ function ReviewContent() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 <div className="lg:col-span-7 space-y-2">
                   <h3
-                    className="text-sm font-semibold text-slate-900 dark:text-white"
+                    className="text-sm font-semibold text-slate-900"
                     dir="auto"
                   >
                     {ticket.subject || (
@@ -422,7 +422,7 @@ function ReviewContent() {
                     )}
                   </h3>
                   <p
-                    className="text-xs text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-relaxed line-clamp-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800"
+                    className="text-xs text-slate-600 whitespace-pre-wrap leading-relaxed line-clamp-3 p-3 rounded-lg bg-slate-50 border border-slate-100"
                     dir="auto"
                   >
                     {ticket.body || (
@@ -432,36 +432,36 @@ function ReviewContent() {
                 </div>
 
                 {/* Proposed Triage Recommendation Box */}
-                <div className="lg:col-span-5 p-3.5 rounded-lg bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200/60 dark:border-purple-900/50 space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-purple-900 dark:text-purple-300">
-                    <Bot className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <div className="lg:col-span-5 p-3.5 rounded-lg bg-purple-50/70 border border-purple-200/80 space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-purple-900">
+                    <Bot className="w-4 h-4 text-purple-600" />
                     <span>Proposed Triage:</span>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 text-xs">
                     <div className="flex items-center gap-1">
                       <span className="text-slate-500">Priority:</span>
-                      <span className="font-semibold text-slate-900 dark:text-slate-100">
+                      <span className="font-semibold text-slate-900">
                         {ticket.ai_priority || ticket.priority}
                       </span>
                     </div>
-                    <span className="text-slate-300 dark:text-slate-700">•</span>
+                    <span className="text-slate-300">•</span>
                     <div className="flex items-center gap-1">
                       <span className="text-slate-500">Category:</span>
-                      <span className="font-semibold text-slate-900 dark:text-slate-100 capitalize">
+                      <span className="font-semibold text-slate-900 capitalize">
                         {ticket.category.replace("_", " ")}
                       </span>
                     </div>
                   </div>
 
                   {ticket.ai_summary && (
-                    <p className="text-xs text-slate-600 dark:text-slate-400 italic pt-1 border-t border-purple-100 dark:border-purple-900/40">
+                    <p className="text-xs text-slate-600 italic pt-1 border-t border-purple-100">
                       &ldquo;{ticket.ai_summary}&rdquo;
                     </p>
                   )}
 
                   {ticket.review_reason && (
-                    <div className="text-[11px] text-purple-800 dark:text-purple-300">
+                    <div className="text-[11px] text-purple-800">
                       Reason: {ticket.review_reason}
                     </div>
                   )}
@@ -477,12 +477,12 @@ function ReviewContent() {
 
               {/* Bottom Actions */}
               {!isEditing && (
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleAccept(ticket)}
                       disabled={isSubmitting}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white transition cursor-pointer shadow-2xs"
                     >
                       {isSubmitting ? (
                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -495,7 +495,7 @@ function ReviewContent() {
                     <button
                       onClick={() => handleStartEdit(ticket)}
                       disabled={isSubmitting}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition cursor-pointer"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                       <span>Adjust & Triage</span>
@@ -504,7 +504,7 @@ function ReviewContent() {
 
                   <Link
                     href={`/tickets/${ticket.id}`}
-                    className="text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1"
+                    className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
                   >
                     <span>View ticket</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -514,14 +514,14 @@ function ReviewContent() {
 
               {/* Inline Adjustment Form */}
               {isEditing && (
-                <div className="mt-3 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-3 animate-in fade-in">
+                <div className="mt-3 p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-3 animate-in fade-in">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <h4 className="text-xs font-semibold text-slate-700">
                       Adjust Classification & Justification
                     </h4>
                     <button
                       onClick={() => setEditingId(null)}
-                      className="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                      className="p-1 rounded text-slate-400 hover:text-slate-600"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -529,7 +529,7 @@ function ReviewContent() {
 
                   {/* Priority Select */}
                   <div>
-                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                    <label className="block text-xs font-medium text-slate-600 mb-1">
                       Priority Level {isEnterprise && <span className="text-amber-600 font-semibold">(Enterprise min P1)</span>}
                     </label>
                     <div className="flex flex-wrap gap-1.5">
@@ -544,7 +544,7 @@ function ReviewContent() {
                             className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border transition cursor-pointer ${
                               isSelected
                                 ? `${conf.bg} ${conf.border} ${conf.text} ring-2 ring-indigo-500/20`
-                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
                             }`}
                           >
                             <span className={`w-1.5 h-1.5 rounded-full ${conf.dot}`} />
@@ -562,7 +562,7 @@ function ReviewContent() {
 
                   {/* Category Select */}
                   <div>
-                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                    <label className="block text-xs font-medium text-slate-600 mb-1">
                       Category
                     </label>
                     <div className="flex flex-wrap gap-1.5">
@@ -575,8 +575,8 @@ function ReviewContent() {
                             onClick={() => setFormCategory(c)}
                             className={`px-2.5 py-1 rounded-md text-xs font-medium border transition cursor-pointer ${
                               isSelected
-                                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-transparent"
-                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                                ? "bg-indigo-600 text-white border-transparent"
+                                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
                             }`}
                           >
                             <span>{CATEGORY_NAMES[c] || c}</span>
@@ -593,7 +593,7 @@ function ReviewContent() {
 
                   {/* Reason Input */}
                   <div>
-                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                    <label className="block text-xs font-medium text-slate-600 mb-1">
                       Reason for modification
                     </label>
                     <textarea
@@ -601,7 +601,7 @@ function ReviewContent() {
                       onChange={(e) => setFormReason(e.target.value)}
                       placeholder="State reason for overriding or adjusting priority/category..."
                       rows={2}
-                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                      className="w-full p-2 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                     />
                     {formErrors.reason && (
                       <p className="text-xs text-rose-600 font-medium mt-0.5">
@@ -616,7 +616,7 @@ function ReviewContent() {
                           key={tmpl}
                           type="button"
                           onClick={() => setFormReason(tmpl)}
-                          className="text-[10px] text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded cursor-pointer transition truncate max-w-xs"
+                          className="text-[10px] text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-2 py-0.5 rounded cursor-pointer transition truncate max-w-xs shadow-2xs"
                           title={tmpl}
                         >
                           + {tmpl}
@@ -630,13 +630,13 @@ function ReviewContent() {
                     <button
                       onClick={() => handleSaveTriage(ticket)}
                       disabled={isSubmitting}
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 transition cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition cursor-pointer shadow-2xs"
                     >
                       {isSubmitting ? "Saving..." : "Save Classification"}
                     </button>
                     <button
                       onClick={() => setEditingId(null)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900"
                     >
                       Cancel
                     </button>

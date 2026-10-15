@@ -31,10 +31,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 font-sans selection:bg-indigo-500 selection:text-white">
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-indigo-500 selection:text-white">
         <Providers>
           <div className="flex flex-col min-h-screen">
-            <React.Suspense fallback={<header className="h-14 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" />}>
+            <React.Suspense fallback={<header className="h-14 border-b border-slate-200 bg-white" />}>
               <Header />
             </React.Suspense>
             <main className="flex-1 pb-16">{children}</main>

@@ -33,30 +33,30 @@ const PRIORITY_CONF: Record<
 > = {
   P0: {
     label: "P0",
-    text: "text-rose-700 dark:text-rose-300",
-    bg: "bg-rose-50 dark:bg-rose-950/40",
-    border: "border-rose-200/80 dark:border-rose-900/50",
+    text: "text-rose-700",
+    bg: "bg-rose-50",
+    border: "border-rose-200",
     dot: "bg-rose-500",
   },
   P1: {
     label: "P1",
-    text: "text-amber-700 dark:text-amber-300",
-    bg: "bg-amber-50 dark:bg-amber-950/40",
-    border: "border-amber-200/80 dark:border-amber-900/50",
+    text: "text-amber-800",
+    bg: "bg-amber-50",
+    border: "border-amber-200",
     dot: "bg-amber-500",
   },
   P2: {
     label: "P2",
-    text: "text-blue-700 dark:text-blue-300",
-    bg: "bg-blue-50 dark:bg-blue-950/40",
-    border: "border-blue-200/80 dark:border-blue-900/50",
+    text: "text-blue-700",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
     dot: "bg-blue-500",
   },
   P3: {
     label: "P3",
-    text: "text-slate-600 dark:text-slate-400",
-    bg: "bg-slate-100 dark:bg-slate-800",
-    border: "border-slate-200 dark:border-slate-700",
+    text: "text-slate-600",
+    bg: "bg-slate-100",
+    border: "border-slate-200",
     dot: "bg-slate-400",
   },
 };
@@ -64,17 +64,17 @@ const PRIORITY_CONF: Record<
 const STATUS_CONF = {
   open: {
     label: "Open",
-    pill: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+    pill: "bg-slate-100 text-slate-700",
     dot: "bg-blue-500",
   },
   in_progress: {
     label: "In Progress",
-    pill: "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
+    pill: "bg-amber-50 text-amber-800 border border-amber-200/80",
     dot: "bg-amber-500",
   },
   resolved: {
     label: "Resolved",
-    pill: "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
+    pill: "bg-emerald-50 text-emerald-800 border border-emerald-200/80",
     dot: "bg-emerald-500",
   },
 };
@@ -118,10 +118,8 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
 
   return (
     <div
-      className={`group border-b border-slate-100 dark:border-slate-800/80 hover:bg-slate-50/70 dark:hover:bg-slate-800/30 transition-colors ${
-        isSelected
-          ? "bg-indigo-50/40 dark:bg-indigo-950/20"
-          : "bg-white dark:bg-slate-900"
+      className={`group border-b border-slate-100 hover:bg-slate-50/70 transition-colors ${
+        isSelected ? "bg-indigo-50/40" : "bg-white"
       }`}
     >
       {/* Desktop Grid Layout */}
@@ -133,20 +131,20 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
             checked={isSelected}
             onChange={() => dispatch(toggleSelectTicket(id))}
             onClick={(e) => e.stopPropagation()}
-            className="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500/20 cursor-pointer flex-shrink-0"
+            className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500/20 cursor-pointer flex-shrink-0"
             aria-label={`Select ticket ${ticket.id}`}
           />
           <div className="flex items-center gap-1 min-w-0">
             <Link
               href={`/tickets/${ticket.id}`}
-              className="font-mono text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate"
+              className="font-mono text-xs font-semibold text-slate-700 hover:text-indigo-600 transition-colors truncate"
               title={ticket.id}
             >
               {ticket.id}
             </Link>
             <button
               onClick={handleCopyId}
-              className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-opacity"
+              className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-slate-400 hover:text-slate-600 transition-opacity"
               title="Copy ID"
             >
               {copied ? (
@@ -169,7 +167,7 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
           {ticket.triage_decision === "manual_review" && !ticket.reviewed_at && (
             <span
               title="Needs AI review"
-              className="inline-flex text-purple-600 dark:text-purple-400 flex-shrink-0"
+              className="inline-flex text-purple-600 flex-shrink-0"
             >
               <Sparkles className="w-3.5 h-3.5" />
             </span>
@@ -198,7 +196,7 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
           <div className="flex items-center gap-2 mb-0.5">
             <Link
               href={`/tickets/${ticket.id}`}
-              className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 truncate hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+              className="text-xs sm:text-sm font-semibold text-slate-900 truncate hover:text-indigo-600 transition-colors"
               title={ticket.subject || "(No subject)"}
               dir="auto"
             >
@@ -207,13 +205,13 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
               )}
             </Link>
             {ticket.customer_plan && (
-              <span className="px-1.5 py-0.2 rounded text-[10px] font-medium uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex-shrink-0">
+              <span className="px-1.5 py-0.2 rounded text-[10px] font-medium uppercase tracking-wider bg-slate-100 text-slate-600 flex-shrink-0">
                 {ticket.customer_plan}
               </span>
             )}
           </div>
           <p
-            className="text-xs text-slate-500 dark:text-slate-400 truncate leading-relaxed"
+            className="text-xs text-slate-500 truncate leading-relaxed"
             dir="auto"
           >
             {ticket.body || "(No message body provided)"}
@@ -233,13 +231,13 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
         {/* Assignment & Action (Col 11-12) */}
         <div className="col-span-2 flex justify-end items-center gap-2">
           {isAssignedToMe ? (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200/60">
               <UserCheck className="w-3.5 h-3.5" />
               <span>You</span>
             </span>
           ) : assignedName ? (
             <span
-              className="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-400 truncate max-w-[110px]"
+              className="inline-flex items-center gap-1 text-xs text-slate-600 truncate max-w-[110px]"
               title={`Assigned to ${assignedName}`}
             >
               <User className="w-3 h-3 text-slate-400 flex-shrink-0" />
@@ -249,16 +247,16 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
             <button
               onClick={handleClaim}
               disabled={isPending}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 transition disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/90 shadow-2xs transition disabled:opacity-50 cursor-pointer"
             >
-              <Zap className="w-3 h-3 text-amber-400 dark:text-amber-500" />
+              <Zap className="w-3 h-3 text-indigo-500" />
               <span>{isPending ? "Claiming..." : "Claim"}</span>
             </button>
           )}
 
           <Link
             href={`/tickets/${ticket.id}`}
-            className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition"
+            className="p-1 rounded text-slate-400 hover:text-slate-700 transition"
             aria-label="View ticket detail"
           >
             <ChevronRight className="w-4 h-4" />
@@ -278,7 +276,7 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
             />
             <Link
               href={`/tickets/${ticket.id}`}
-              className="font-mono text-xs font-semibold text-slate-700 dark:text-slate-300"
+              className="font-mono text-xs font-semibold text-slate-700"
             >
               {ticket.id}
             </Link>
@@ -303,20 +301,20 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
 
         <Link href={`/tickets/${ticket.id}`} className="block">
           <h3
-            className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white truncate"
+            className="text-xs sm:text-sm font-semibold text-slate-900 truncate"
             dir="auto"
           >
             {ticket.subject || "(No subject)"}
           </h3>
           <p
-            className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5"
+            className="text-xs text-slate-500 truncate mt-0.5"
             dir="auto"
           >
             {ticket.body || "(No message body)"}
           </p>
         </Link>
 
-        <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between pt-1 border-t border-slate-100">
           <span className="text-[11px] text-slate-400">
             {assignedName ? `Assigned: ${assignedName}` : "Unassigned"}
           </span>
@@ -325,7 +323,7 @@ export const TicketRow = React.memo(function TicketRow({ id }: TicketRowProps) {
             <button
               onClick={handleClaim}
               disabled={isPending}
-              className="px-2.5 py-1 rounded text-xs font-medium bg-slate-900 text-white dark:bg-white dark:text-slate-900"
+              className="px-2.5 py-1 rounded text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200"
             >
               Claim
             </button>
