@@ -12,7 +12,7 @@ import {
   claimTicket,
   changeStatus,
 } from "@/store/ticketsSlice";
-import { CheckSquare, UserCheck, Play, CheckCircle2, X, RefreshCw } from "lucide-react";
+import { CheckSquare, Play, CheckCircle2, X, RefreshCw, Zap } from "lucide-react";
 
 export function BulkActionsBar() {
   const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ export function BulkActionsBar() {
   const selectedSet = new Set(selectedIds);
   const targetTickets = allTickets.filter((t) => selectedSet.has(t.id));
 
-  // Bulk Claim Action: 1 request per ticket, rolls back only failed ones (Page 5, 7.6)
+  // Bulk Claim Action: 1 request per ticket, rolls back only failed ones
   const handleBulkClaim = async () => {
     if (processing) return;
     setProcessing(true);
@@ -38,7 +38,6 @@ export function BulkActionsBar() {
     let failed = 0;
 
     for (const ticket of targetTickets) {
-      // Only claim unassigned tickets or tickets not already mine
       if (ticket.assigned_to !== currentAgent) {
         try {
           await dispatch(claimTicket(ticket.id)).unwrap();
@@ -51,7 +50,7 @@ export function BulkActionsBar() {
 
     setProcessing(false);
     setResultMessage(
-      `Claimed ${succeeded} tickets.${failed > 0 ? ` ${failed} failed or were taken by another agent.` : ""}`
+      `Claimed ${succeeded} tickets.${failed > 0 ? ` ${failed} failed or taken.` : ""}`
     );
     if (failed === 0) {
       dispatch(clearSelection());
@@ -117,31 +116,35 @@ export function BulkActionsBar() {
   };
 
   return (
-    <div className="sticky bottom-6 z-40 max-w-2xl mx-auto px-4">
-      <div className="bg-zinc-900 text-white rounded-2xl p-4 shadow-2xl border border-zinc-700 flex flex-col sm:flex-row items-center justify-between gap-3 animate-in slide-in-from-bottom-3 duration-200">
-        <div className="flex items-center gap-2">
-          <CheckSquare className="w-5 h-5 text-indigo-400 flex-shrink-0" />
-          <span className="text-sm font-semibold">
-            {selectedIds.length} {selectedIds.length === 1 ? "ticket" : "tickets"} selected
-          </span>
-          {resultMessage && (
-            <span className="text-xs text-zinc-300 ml-2 hidden sm:inline">
-              ({resultMessage})
+    <div className="fixed bottom-6 inset-x-0 z-40 max-w-lg mx-auto px-4 pointer-events-none">
+      <div className="pointer-events-auto bg-slate-900 dark:bg-slate-950 text-white rounded-xl px-4 py-2.5 shadow-xl border border-slate-800 flex items-center justify-between gap-3 animate-in slide-in-from-bottom-3 duration-150">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-5 h-5 rounded bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0">
+            <CheckSquare className="w-3.5 h-3.5" />
+          </div>
+          <div className="min-w-0">
+            <span className="text-xs font-semibold text-white">
+              {selectedIds.length} selected
             </span>
-          )}
+            {resultMessage && (
+              <span className="text-[11px] text-slate-400 ml-2 truncate inline-block max-w-[140px] align-bottom">
+                {resultMessage}
+              </span>
+            )}
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-1.5 flex-shrink-0">
           {/* Claim All */}
           <button
             onClick={handleBulkClaim}
             disabled={processing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 transition cursor-pointer"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 transition cursor-pointer"
           >
             {processing ? (
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+              <RefreshCw className="w-3 h-3 animate-spin" />
             ) : (
-              <UserCheck className="w-3.5 h-3.5" />
+              <Zap className="w-3 h-3" />
             )}
             <span>Claim</span>
           </button>
@@ -150,9 +153,9 @@ export function BulkActionsBar() {
           <button
             onClick={handleBulkInProgress}
             disabled={processing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 transition cursor-pointer"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 disabled:opacity-50 transition cursor-pointer border border-slate-700"
           >
-            <Play className="w-3.5 h-3.5 text-amber-400" />
+            <Play className="w-3 h-3 text-amber-400" />
             <span>Start</span>
           </button>
 
@@ -160,9 +163,9 @@ export function BulkActionsBar() {
           <button
             onClick={handleBulkResolve}
             disabled={processing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 transition cursor-pointer"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 disabled:opacity-50 transition cursor-pointer border border-slate-700"
           >
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            <CheckCircle2 className="w-3 h-3 text-emerald-400" />
             <span>Resolve</span>
           </button>
 
@@ -170,10 +173,10 @@ export function BulkActionsBar() {
           <button
             onClick={() => dispatch(clearSelection())}
             disabled={processing}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+            className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer ml-1"
             title="Deselect all"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

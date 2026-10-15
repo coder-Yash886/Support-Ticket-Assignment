@@ -4,7 +4,7 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { selectPendingNewCount } from "@/store/selectors";
 import { mergeNewTickets } from "@/store/ticketsSlice";
-import { ArrowUpCircle } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 export function NewTicketsBanner() {
   const dispatch = useAppDispatch();
@@ -13,13 +13,16 @@ export function NewTicketsBanner() {
   if (count <= 0) return null;
 
   return (
-    <div className="sticky top-16 z-30 flex justify-center my-3 animate-in fade-in slide-in-from-top-2 duration-200">
+    <div className="sticky top-16 z-30 flex justify-center my-2 animate-in fade-in slide-in-from-top-2 duration-150">
       <button
         onClick={() => dispatch(mergeNewTickets())}
-        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-full shadow-lg shadow-indigo-500/25 text-sm font-medium transition cursor-pointer"
+        className="group flex items-center gap-2 px-3.5 py-1.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-full shadow-md text-xs font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-all cursor-pointer"
       >
-        <ArrowUpCircle className="w-4 h-4 animate-bounce" />
-        <span>{count} new {count === 1 ? "ticket" : "tickets"} arrived — Click to show</span>
+        <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 dark:bg-indigo-600" />
+        <span>
+          {count} new {count === 1 ? "ticket" : "tickets"} arrived — click to show
+        </span>
+        <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />
       </button>
     </div>
   );

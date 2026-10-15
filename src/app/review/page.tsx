@@ -26,14 +26,63 @@ import {
   X,
   Inbox,
   AlertCircle,
+  Check,
 } from "lucide-react";
+
+const PRIORITY_CONF: Record<
+  Priority,
+  { label: string; text: string; bg: string; border: string; dot: string }
+> = {
+  P0: {
+    label: "P0 Critical",
+    text: "text-rose-700 dark:text-rose-300",
+    bg: "bg-rose-50 dark:bg-rose-950/40",
+    border: "border-rose-200/80 dark:border-rose-900/50",
+    dot: "bg-rose-500",
+  },
+  P1: {
+    label: "P1 High",
+    text: "text-amber-700 dark:text-amber-300",
+    bg: "bg-amber-50 dark:bg-amber-950/40",
+    border: "border-amber-200/80 dark:border-amber-900/50",
+    dot: "bg-amber-500",
+  },
+  P2: {
+    label: "P2 Normal",
+    text: "text-blue-700 dark:text-blue-300",
+    bg: "bg-blue-50 dark:bg-blue-950/40",
+    border: "border-blue-200/80 dark:border-blue-900/50",
+    dot: "bg-blue-500",
+  },
+  P3: {
+    label: "P3 Low",
+    text: "text-slate-600 dark:text-slate-400",
+    bg: "bg-slate-100 dark:bg-slate-800",
+    border: "border-slate-200 dark:border-slate-700",
+    dot: "bg-slate-400",
+  },
+};
+
+const CATEGORY_NAMES: Record<Category, string> = {
+  billing: "Billing",
+  bug: "Bug Report",
+  account_access: "Account Access",
+  feature_request: "Feature Request",
+  other: "General",
+};
+
+const REASON_TEMPLATES = [
+  "Verified customer request and validated priority classification.",
+  "Adjusted per Enterprise SLA policy guidelines.",
+  "Security audit cleared after payload analysis.",
+  "Technical reproduction steps validated by support team.",
+];
 
 function ReviewContent() {
   const dispatch = useAppDispatch();
   const currentAgent = useAppSelector(selectActiveAgent);
   const allTickets = useAppSelector(selectAllTickets);
 
-  // Background polling for review queue
   useLiveUpdates({ intervalMs: 5000 });
 
   const [loading, setLoading] = useState(false);
@@ -43,12 +92,12 @@ function ReviewContent() {
     text: string;
   } | null>(null);
 
-  // Optimistically removed IDs for immediate queue removal
+  // Optimistically removed IDs for immediate UI responsiveness
   const [optimisticRemoved, setOptimisticRemoved] = useState<Set<string>>(
     new Set()
   );
 
-  // Expanded editor form states: ticketId -> editing state
+  // Editor states
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formPriority, setFormPriority] = useState<Priority>("P1");
   const [formCategory, setFormCategory] = useState<Category>("bug");
@@ -56,7 +105,7 @@ function ReviewContent() {
   const [formErrors, setFormErrors] = useState<TriageValidationErrors>({});
   const [submittingId, setSubmittingId] = useState<string | null>(null);
 
-  // Fetch initial review tickets from server
+  // Load review tickets from server
   const loadReviewTickets = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -80,7 +129,7 @@ function ReviewContent() {
     loadReviewTickets();
   }, [loadReviewTickets]);
 
-  // Review Queue filter: manual_review AND not reviewed yet (Page 2, point 11)
+  // Review Queue filter: manual_review AND not reviewed yet
   const reviewTickets = allTickets.filter(
     (t) =>
       t.triage_decision === "manual_review" &&
@@ -88,9 +137,8 @@ function ReviewContent() {
       !optimisticRemoved.has(t.id)
   );
 
-  // Action: Accept AI suggestion (Page 6)
+  // Action: Accept AI suggestion
   const handleAccept = async (ticket: Ticket) => {
-    // Check if ticket has invalid enums (like T-2004)
     if (
       ticket.flags.includes("invalid_priority") ||
       ticket.flags.includes("invalid_category")
@@ -102,7 +150,6 @@ function ReviewContent() {
       return;
     }
 
-    // Optimistically remove from queue immediately
     setOptimisticRemoved((prev) => new Set(prev).add(ticket.id));
     setSubmittingId(ticket.id);
 
@@ -128,7 +175,6 @@ function ReviewContent() {
         text: `Approved triage for ticket ${ticket.id}`,
       });
     } catch (err: any) {
-      // Rollback: return to queue
       setOptimisticRemoved((prev) => {
         const copy = new Set(prev);
         copy.delete(ticket.id);
@@ -160,7 +206,6 @@ function ReviewContent() {
 
   // Action: Submit manual triage adjustment
   const handleSaveTriage = async (ticket: Ticket) => {
-    // 1. Client-side fast validation
     const errors = validateTriage(
       ticket.customer_plan,
       formPriority,
@@ -172,7 +217,6 @@ function ReviewContent() {
       return;
     }
 
-    // 2. Optimistically remove from queue immediately
     setOptimisticRemoved((prev) => new Set(prev).add(ticket.id));
     setSubmittingId(ticket.id);
 
@@ -210,7 +254,6 @@ function ReviewContent() {
         text: `Triaged and updated ticket ${ticket.id}`,
       });
     } catch (err: any) {
-      // Rollback on failure
       setOptimisticRemoved((prev) => {
         const copy = new Set(prev);
         copy.delete(ticket.id);
@@ -228,52 +271,55 @@ function ReviewContent() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Title & Introduction */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-            <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">
-              AI Triage Review Queue
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              Triage Review
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">
+            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
               {reviewTickets.length} pending
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-            Human-in-the-loop review for ambiguous tickets, prompt injections, and SLA policy constraints.
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Human-in-the-loop review for ambiguous classifications and policy constraints.
           </p>
         </div>
 
         <button
           onClick={loadReviewTickets}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 text-zinc-700 dark:text-zinc-300 transition cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition cursor-pointer self-start sm:self-auto disabled:opacity-50"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-          <span>Refresh Queue</span>
+          <RefreshCw
+            className={`w-3.5 h-3.5 text-slate-400 ${
+              loading ? "animate-spin text-purple-600" : ""
+            }`}
+          />
+          <span>Refresh</span>
         </button>
       </div>
 
       {/* Toast Alert */}
       {toastMessage && (
         <div
-          className={`p-3.5 rounded-xl border text-sm flex items-center justify-between ${
+          className={`p-3 rounded-lg border text-xs flex items-center justify-between animate-in fade-in ${
             toastMessage.type === "success"
-              ? "bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/60 dark:border-emerald-800 dark:text-emerald-200"
-              : "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/60 dark:border-red-800 dark:text-red-200"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-200"
+              : "bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-200"
           }`}
         >
           <div className="flex items-center gap-2">
             {toastMessage.type === "success" ? (
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
             ) : (
-              <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-rose-600 flex-shrink-0" />
             )}
-            <span>{toastMessage.text}</span>
+            <span className="font-medium">{toastMessage.text}</span>
           </div>
           <button
             onClick={() => setToastMessage(null)}
-            className="text-xs font-bold px-1.5 py-0.5 hover:opacity-70"
+            className="p-1 rounded text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
           >
             ✕
           </button>
@@ -282,9 +328,9 @@ function ReviewContent() {
 
       {/* Network Error Box */}
       {error && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm flex items-center justify-between">
+        <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
+            <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0" />
             <span>{error}</span>
           </div>
           <button
@@ -296,24 +342,24 @@ function ReviewContent() {
         </div>
       )}
 
-      {/* Empty State */}
+      {/* Empty State: Inbox Zero */}
       {!loading && reviewTickets.length === 0 && (
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-12 text-center border border-zinc-200 dark:border-zinc-800 shadow-sm space-y-3">
-          <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center mx-auto text-emerald-600 dark:text-emerald-400">
-            <CheckCircle2 className="w-6 h-6" />
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-12 text-center border border-slate-200 dark:border-slate-800 space-y-3">
+          <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center mx-auto text-emerald-600 dark:text-emerald-400">
+            <CheckCircle2 className="w-5 h-5" />
           </div>
-          <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-            Review Queue All Caught Up!
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+            Review Queue All Caught Up
           </h3>
-          <p className="text-sm text-zinc-500 max-w-sm mx-auto">
-            All flagged tickets have been reviewed and approved. New uncertain tickets will appear here automatically via live polling.
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+            All tickets requiring manual evaluation have been resolved. New ambiguous tickets will appear here automatically.
           </p>
           <div className="pt-2">
             <Link
               href="/tickets"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition"
             >
-              <span>Back to Tickets List</span>
+              <span>Back to Tickets</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -326,247 +372,277 @@ function ReviewContent() {
           const isSubmitting = submittingId === ticket.id;
           const isEditing = editingId === ticket.id;
           const isEnterprise = ticket.customer_plan === "enterprise";
+          const priorityConf =
+            PRIORITY_CONF[ticket.priority as Priority] || PRIORITY_CONF.P3;
 
           return (
             <div
               key={ticket.id}
-              className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden transition"
+              className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 space-y-4 transition"
             >
-              {/* Card Header */}
-              <div className="p-5 space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/tickets/${ticket.id}`}
-                      className="font-mono text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
-                    >
-                      {ticket.id}
-                    </Link>
-                    <span className="px-2 py-0.5 rounded text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 capitalize">
-                      Plan: {ticket.customer_plan}
-                    </span>
-                    {ticket.flags.map((flag) => (
-                      <span
-                        key={flag}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800"
-                      >
-                        <ShieldAlert className="w-3 h-3" />
-                        <span>{flag.replace("_", " ")}</span>
-                      </span>
-                    ))}
-                  </div>
+              {/* Header: ID, Plan, Flags, Created */}
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Link
+                    href={`/tickets/${ticket.id}`}
+                    className="font-mono text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400"
+                  >
+                    {ticket.id}
+                  </Link>
 
-                  <span className="text-xs text-zinc-400">
-                    Created: {new Date(ticket.createdAt).toLocaleDateString()}
+                  <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 capitalize">
+                    {ticket.customer_plan}
                   </span>
+
+                  {ticket.flags.map((flag) => (
+                    <span
+                      key={flag}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900"
+                    >
+                      <ShieldAlert className="w-3 h-3 text-amber-600" />
+                      <span>{flag.replace("_", " ")}</span>
+                    </span>
+                  ))}
                 </div>
 
-                {/* Subject & Body (Safe text rendering, dir="auto") */}
-                <div>
+                <span className="text-xs text-slate-400">
+                  {new Date(ticket.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+
+              {/* Subject & Description */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                <div className="lg:col-span-7 space-y-2">
                   <h3
-                    className="text-base font-semibold text-zinc-900 dark:text-zinc-100 break-words"
+                    className="text-sm font-semibold text-slate-900 dark:text-white"
                     dir="auto"
                   >
                     {ticket.subject || (
-                      <span className="text-zinc-400 italic">(No subject)</span>
+                      <span className="text-slate-400 italic">(No subject)</span>
                     )}
                   </h3>
                   <p
-                    className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap break-words mt-1 line-clamp-3"
+                    className="text-xs text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-relaxed line-clamp-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800"
                     dir="auto"
                   >
                     {ticket.body || (
-                      <span className="text-zinc-400 italic">(No body content)</span>
+                      <span className="text-slate-400 italic">(No body content)</span>
                     )}
                   </p>
                 </div>
 
-                {/* AI Suggestions Box */}
-                <div className="p-3.5 rounded-xl bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-purple-900 dark:text-purple-300">
+                {/* Proposed Triage Recommendation Box */}
+                <div className="lg:col-span-5 p-3.5 rounded-lg bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200/60 dark:border-purple-900/50 space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-purple-900 dark:text-purple-300">
                     <Bot className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                    <span>AI Analysis & Proposed Classification:</span>
+                    <span>Proposed Triage:</span>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 text-xs">
-                    <div>
-                      <span className="text-zinc-500">Suggested Priority: </span>
-                      <strong className="text-zinc-900 dark:text-zinc-100">
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <div className="flex items-center gap-1">
+                      <span className="text-slate-500">Priority:</span>
+                      <span className="font-semibold text-slate-900 dark:text-slate-100">
                         {ticket.ai_priority || ticket.priority}
-                      </strong>
+                      </span>
                     </div>
-                    <div>
-                      <span className="text-zinc-500">Category: </span>
-                      <strong className="text-zinc-900 dark:text-zinc-100">
+                    <span className="text-slate-300 dark:text-slate-700">•</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-slate-500">Category:</span>
+                      <span className="font-semibold text-slate-900 dark:text-slate-100 capitalize">
                         {ticket.category.replace("_", " ")}
-                      </strong>
+                      </span>
                     </div>
-                    {ticket.review_reason && (
-                      <div>
-                        <span className="text-zinc-500">Flag Reason: </span>
-                        <span className="italic text-purple-700 dark:text-purple-300">
-                          {ticket.review_reason}
-                        </span>
-                      </div>
-                    )}
                   </div>
 
                   {ticket.ai_summary && (
-                    <p className="text-xs text-zinc-700 dark:text-zinc-300 pt-1 border-t border-purple-200/60 dark:border-purple-900/40">
-                      <strong>Summary: </strong>
-                      {ticket.ai_summary}
+                    <p className="text-xs text-slate-600 dark:text-slate-400 italic pt-1 border-t border-purple-100 dark:border-purple-900/40">
+                      &ldquo;{ticket.ai_summary}&rdquo;
                     </p>
                   )}
 
-                  {/* Enterprise minimum P1 warning */}
+                  {ticket.review_reason && (
+                    <div className="text-[11px] text-purple-800 dark:text-purple-300">
+                      Reason: {ticket.review_reason}
+                    </div>
+                  )}
+
                   {isEnterprise &&
                     (ticket.priority === "P2" || ticket.priority === "P3") && (
-                      <div className="p-2 rounded bg-amber-100/70 border border-amber-300 text-amber-900 text-xs font-medium">
-                        ⚠️ Enterprise rule: AI suggested {ticket.priority}, but Enterprise tickets must stay P1 or higher.
+                      <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium">
+                        Enterprise policy: Requires minimum P1 priority.
                       </div>
                     )}
                 </div>
-
-                {/* Action Buttons */}
-                {!isEditing && (
-                  <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleAccept(ticket)}
-                        disabled={isSubmitting}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white shadow-sm shadow-emerald-500/20 transition cursor-pointer"
-                      >
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span>{isSubmitting ? "Approving..." : "Accept AI Decision"}</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleStartEdit(ticket)}
-                        disabled={isSubmitting}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 transition cursor-pointer"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                        <span>Modify & Triage</span>
-                      </button>
-                    </div>
-
-                    <Link
-                      href={`/tickets/${ticket.id}`}
-                      className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
-                    >
-                      <span>View full ticket</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                )}
-
-                {/* Modify & Triage Inline Form */}
-                {isEditing && (
-                  <div className="mt-4 p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700 space-y-4 animate-in fade-in">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-500">
-                        Adjust Priority, Category & Reasoning
-                      </h4>
-                      <button
-                        onClick={() => setEditingId(null)}
-                        className="text-zinc-400 hover:text-zinc-600"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Priority Selector */}
-                      <div>
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
-                          Priority {isEnterprise && <span className="text-amber-600 font-normal">(Enterprise min P1)</span>}
-                        </label>
-                        <select
-                          value={formPriority}
-                          onChange={(e) => setFormPriority(e.target.value as Priority)}
-                          className="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-medium"
-                        >
-                          {PRIORITIES.map((p) => (
-                            <option key={p} value={p}>
-                              {p} {p === "P0" ? "- Critical" : p === "P1" ? "- High" : p === "P2" ? "- Medium" : "- Low"}
-                            </option>
-                          ))}
-                        </select>
-                        {formErrors.priority && (
-                          <p className="text-xs text-red-600 mt-1">{formErrors.priority}</p>
-                        )}
-                      </div>
-
-                      {/* Category Selector */}
-                      <div>
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
-                          Category
-                        </label>
-                        <select
-                          value={formCategory}
-                          onChange={(e) => setFormCategory(e.target.value as Category)}
-                          className="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-medium"
-                        >
-                          {CATEGORIES.map((c) => (
-                            <option key={c} value={c}>
-                              {c.replace("_", " ")}
-                            </option>
-                          ))}
-                        </select>
-                        {formErrors.category && (
-                          <p className="text-xs text-red-600 mt-1">{formErrors.category}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Reason Textarea (10 character minimum rule) */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                          Review Reason (Audit Trail)
-                        </label>
-                        <span
-                          className={`text-[11px] ${
-                            formReason.trim().length >= 10
-                              ? "text-emerald-600"
-                              : "text-amber-600 font-semibold"
-                          }`}
-                        >
-                          {formReason.trim().length}/10 characters min
-                        </span>
-                      </div>
-                      <textarea
-                        value={formReason}
-                        onChange={(e) => setFormReason(e.target.value)}
-                        rows={2}
-                        placeholder="Explain why this ticket classification was chosen (at least 10 characters)..."
-                        className="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs"
-                      />
-                      {formErrors.reason && (
-                        <p className="text-xs text-red-600 mt-0.5">{formErrors.reason}</p>
-                      )}
-                    </div>
-
-                    <div className="flex justify-end gap-2 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => setEditingId(null)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-800"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleSaveTriage(ticket)}
-                        disabled={isSubmitting}
-                        className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition cursor-pointer disabled:opacity-50"
-                      >
-                        {isSubmitting ? "Saving..." : "Save & Approve"}
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
+
+              {/* Bottom Actions */}
+              {!isEditing && (
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleAccept(ticket)}
+                      disabled={isSubmitting}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white transition cursor-pointer"
+                    >
+                      {isSubmitting ? (
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      )}
+                      <span>{isSubmitting ? "Approving..." : "Approve Triage"}</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleStartEdit(ticket)}
+                      disabled={isSubmitting}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition cursor-pointer"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Adjust & Triage</span>
+                    </button>
+                  </div>
+
+                  <Link
+                    href={`/tickets/${ticket.id}`}
+                    className="text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1"
+                  >
+                    <span>View ticket</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              )}
+
+              {/* Inline Adjustment Form */}
+              {isEditing && (
+                <div className="mt-3 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-3 animate-in fade-in">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Adjust Classification & Justification
+                    </h4>
+                    <button
+                      onClick={() => setEditingId(null)}
+                      className="p-1 rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Priority Select */}
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Priority Level {isEnterprise && <span className="text-amber-600 font-semibold">(Enterprise min P1)</span>}
+                    </label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {PRIORITIES.map((p) => {
+                        const conf = PRIORITY_CONF[p];
+                        const isSelected = formPriority === p;
+                        return (
+                          <button
+                            key={p}
+                            type="button"
+                            onClick={() => setFormPriority(p)}
+                            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border transition cursor-pointer ${
+                              isSelected
+                                ? `${conf.bg} ${conf.border} ${conf.text} ring-2 ring-indigo-500/20`
+                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                            }`}
+                          >
+                            <span className={`w-1.5 h-1.5 rounded-full ${conf.dot}`} />
+                            <span>{conf.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {formErrors.priority && (
+                      <p className="text-xs text-rose-600 font-medium mt-1">
+                        {formErrors.priority}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Category Select */}
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Category
+                    </label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {CATEGORIES.map((c) => {
+                        const isSelected = formCategory === c;
+                        return (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() => setFormCategory(c)}
+                            className={`px-2.5 py-1 rounded-md text-xs font-medium border transition cursor-pointer ${
+                              isSelected
+                                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-transparent"
+                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                            }`}
+                          >
+                            <span>{CATEGORY_NAMES[c] || c}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {formErrors.category && (
+                      <p className="text-xs text-rose-600 font-medium mt-1">
+                        {formErrors.category}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Reason Input */}
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Reason for modification
+                    </label>
+                    <textarea
+                      value={formReason}
+                      onChange={(e) => setFormReason(e.target.value)}
+                      placeholder="State reason for overriding or adjusting priority/category..."
+                      rows={2}
+                      className="w-full p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    />
+                    {formErrors.reason && (
+                      <p className="text-xs text-rose-600 font-medium mt-0.5">
+                        {formErrors.reason}
+                      </p>
+                    )}
+
+                    {/* Quick Reason Templates */}
+                    <div className="flex flex-wrap gap-1 mt-1.5">
+                      {REASON_TEMPLATES.map((tmpl) => (
+                        <button
+                          key={tmpl}
+                          type="button"
+                          onClick={() => setFormReason(tmpl)}
+                          className="text-[10px] text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded cursor-pointer transition truncate max-w-xs"
+                          title={tmpl}
+                        >
+                          + {tmpl}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Form Actions */}
+                  <div className="flex items-center gap-2 pt-2">
+                    <button
+                      onClick={() => handleSaveTriage(ticket)}
+                      disabled={isSubmitting}
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 transition cursor-pointer"
+                    >
+                      {isSubmitting ? "Saving..." : "Save Classification"}
+                    </button>
+                    <button
+                      onClick={() => setEditingId(null)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
@@ -579,8 +655,8 @@ export default function ReviewPage() {
   return (
     <Suspense
       fallback={
-        <div className="max-w-5xl mx-auto px-4 py-12 text-center text-zinc-400">
-          Loading AI review queue...
+        <div className="max-w-5xl mx-auto px-4 py-16 text-center text-slate-400 text-xs">
+          Loading review queue...
         </div>
       }
     >

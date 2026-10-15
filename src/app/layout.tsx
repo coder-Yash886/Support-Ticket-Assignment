@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Support Ticket Dashboard",
-  description: "High-performance real-time support ticket dashboard with SLA tracking",
+  title: "Support Desk | Operations & Triage",
+  description: "Fast, focused support ticket workspace with real-time SLA tracking and AI triage review",
 };
 
 export default function RootLayout({
@@ -29,13 +29,16 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans">
+      <body className="min-h-full flex flex-col bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 font-sans selection:bg-indigo-500 selection:text-white">
         <Providers>
-          <React.Suspense fallback={<header className="h-16 border-b border-zinc-200 dark:border-zinc-800" />}>
-            <Header />
-          </React.Suspense>
-          <main className="flex-1">{children}</main>
+          <div className="flex flex-col min-h-screen">
+            <React.Suspense fallback={<header className="h-14 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" />}>
+              <Header />
+            </React.Suspense>
+            <main className="flex-1 pb-16">{children}</main>
+          </div>
         </Providers>
       </body>
     </html>
