@@ -82,6 +82,15 @@ function TicketsContent() {
     [allTickets, now]
   );
 
+  // Auto-dismiss mutation error banner after 5 seconds
+  useEffect(() => {
+    if (!mutationError) return;
+    const timer = setTimeout(() => {
+      dispatch(clearMutationError());
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [mutationError, dispatch]);
+
   // Filter visible tickets if quickView is active
   const filteredTicketIds = useMemo(() => {
     if (quickView === "all") return rawTicketIds;
@@ -300,18 +309,18 @@ function TicketsContent() {
         )}
       </div>
 
-      {/* Mutation Error Notice */}
+      {/* Mutation Error Notice (Auto-dismisses in 5s) */}
       {mutationError && (
-        <div className="flex items-center justify-between p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between px-3.5 py-2.5 rounded-lg bg-amber-50/90 border border-amber-200/90 text-amber-900 text-xs shadow-2xs animate-in fade-in duration-150">
+          <div className="flex items-center gap-2 min-w-0">
             <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
-            <span>{mutationError}</span>
+            <span className="font-medium truncate">{mutationError}</span>
           </div>
           <button
             onClick={() => dispatch(clearMutationError())}
-            className="p-0.5 rounded text-amber-700 hover:text-amber-900"
+            className="flex-shrink-0 ml-3 text-[11px] font-semibold text-amber-800 hover:text-amber-950 px-2 py-0.5 rounded hover:bg-amber-100 transition cursor-pointer"
           >
-            <X className="w-3.5 h-3.5" />
+            Dismiss
           </button>
         </div>
       )}

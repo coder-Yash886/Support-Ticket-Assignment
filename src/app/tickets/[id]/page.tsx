@@ -98,6 +98,15 @@ function TicketDetailContent() {
   } | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Auto-dismiss toast after 4 seconds
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = setTimeout(() => {
+      setToastMessage(null);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
+
   // Fetch ticket details from server
   const loadTicket = useCallback(async () => {
     if (!id) return;

@@ -92,6 +92,15 @@ function ReviewContent() {
     text: string;
   } | null>(null);
 
+  // Auto-dismiss toast after 4 seconds
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = setTimeout(() => {
+      setToastMessage(null);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
+
   // Optimistically removed IDs for immediate UI responsiveness
   const [optimisticRemoved, setOptimisticRemoved] = useState<Set<string>>(
     new Set()
